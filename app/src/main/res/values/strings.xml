@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">dlfeey</string>
+
+    <string name="category_all">総合</string>
+    <string name="category_social">世の中</string>
+    <string name="category_economics">政治と経済</string>
+    <string name="category_life">暮らし</string>
 </resources>

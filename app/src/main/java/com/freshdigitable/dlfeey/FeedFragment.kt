@@ -19,6 +19,21 @@ import javax.inject.Inject
 class FeedFragment : Fragment() {
     @Inject
     lateinit var factory : ViewModelProvider.Factory
+    @Inject
+    lateinit var recycledViewPool: RecyclerView.RecycledViewPool
+
+    companion object {
+        private const val ARGS_FEED_URL = "feed_url"
+
+        fun newInstance(url: String): FeedFragment {
+            val args = Bundle().apply {
+                putString(ARGS_FEED_URL, url)
+            }
+            return FeedFragment().apply {
+                arguments = args
+            }
+        }
+    }
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -41,6 +56,7 @@ class FeedFragment : Fragment() {
         val listView = view.findViewById<RecyclerView>(R.id.feed_list) ?: throw IllegalStateException()
         listView.layoutManager = LinearLayoutManager(view.context)
         listView.setHasFixedSize(true)
+        listView.setRecycledViewPool(recycledViewPool)
 
         val adapter = Adapter()
         listView.adapter = adapter
@@ -51,8 +67,11 @@ class FeedFragment : Fragment() {
             adapter.notifyDataSetChanged()
         })
 
-        viewModel.loadFeed("http://b.hatena.ne.jp/hotentry.rss")
+        viewModel.loadFeed(url)
     }
+
+    private val url
+        get() = arguments?.getString(ARGS_FEED_URL) ?: throw IllegalArgumentException("use newInstance()")
 }
 
 class Adapter : RecyclerView.Adapter<ViewHolder>() {

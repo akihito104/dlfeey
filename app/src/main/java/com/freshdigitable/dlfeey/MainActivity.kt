@@ -1,9 +1,12 @@
 package com.freshdigitable.dlfeey
 
 import android.os.Bundle
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModel
+import androidx.viewpager.widget.ViewPager
 import dagger.Binds
 import dagger.Module
 import dagger.android.AndroidInjection
@@ -21,9 +24,18 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, FeedFragment())
-            .commit()
+        val viewPager = findViewById<ViewPager>(R.id.main_pager)
+        viewPager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+            override fun getItem(position: Int): Fragment {
+                return FeedFragment.newInstance(Category.values()[position].url)
+            }
+
+            override fun getPageTitle(position: Int): CharSequence? {
+                return applicationContext.getString(Category.values()[position].title)
+            }
+
+            override fun getCount(): Int = Category.values().size
+        }
     }
 
     @Inject
@@ -31,6 +43,16 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return injector
     }
+}
+
+enum class Category(
+    @StringRes val title: Int,
+    val url: String
+) {
+    ALL(R.string.category_all, "http://b.hatena.ne.jp/hotentry.rss"),
+    SOCIAL(R.string.category_social, "http://b.hatena.ne.jp/hotentry/social.rss"),
+    ECONOMICS(R.string.category_economics, "http://b.hatena.ne.jp/hotentry/economics.rss"),
+    LIFE(R.string.category_life, "http://b.hatena.ne.jp/hotentry/life.rss"),
 }
 
 @Module
