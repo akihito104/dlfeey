@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeye
+package com.freshdigitable.dlfeey
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.freshdigitable.dlfeye.databinding.ViewFeedItemBinding
+import com.freshdigitable.dlfeey.databinding.ViewFeedItemBinding
 import com.rometools.rome.feed.synd.SyndEntry
 
 class FeedFragment : Fragment() {
@@ -69,5 +69,5 @@ class Adapter : RecyclerView.Adapter<ViewHolder>() {
 }
 
 class ViewHolder(
-    val binding: com.freshdigitable.dlfeye.databinding.ViewFeedItemBinding
+    val binding: com.freshdigitable.dlfeey.databinding.ViewFeedItemBinding
 ) : RecyclerView.ViewHolder(binding.root)

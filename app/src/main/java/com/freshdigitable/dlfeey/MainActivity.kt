@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeye
+package com.freshdigitable.dlfeey
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

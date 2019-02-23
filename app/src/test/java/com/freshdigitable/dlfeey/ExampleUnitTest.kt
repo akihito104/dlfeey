@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeye
+package com.freshdigitable.dlfeey
 
 import org.junit.Test
 
