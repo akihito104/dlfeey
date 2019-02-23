@@ -1,15 +1,15 @@
 package com.freshdigitable.dlfeey
 
 import androidx.lifecycle.ViewModel
+import javax.inject.Inject
 
-class FeedViewModel(
+class FeedViewModel @Inject constructor(
+    private val repository: FeedRepository
 ) : ViewModel() {
-    private val repository = FeedRepository()
 
     val feed = repository.feed
 
     fun loadFeed(url: String) {
         repository.load(url)
     }
-
 }

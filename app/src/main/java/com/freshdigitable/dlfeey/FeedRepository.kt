@@ -4,11 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedInput
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.IOException
+import javax.inject.Inject
 
-class FeedRepository {
-    private val client = OkHttpClient()
+class FeedRepository @Inject constructor(
+    private val client: OkHttpClient
+){
     private val _feed = MutableLiveData<SyndFeed>()
     val feed: LiveData<SyndFeed> = _feed
 

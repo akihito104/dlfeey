@@ -1,18 +1,30 @@
 package com.freshdigitable.dlfeey
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.freshdigitable.dlfeey.databinding.ViewFeedItemBinding
 import com.rometools.rome.feed.synd.SyndEntry
+import dagger.android.support.AndroidSupportInjection
+import javax.inject.Inject
 
 class FeedFragment : Fragment() {
+    @Inject
+    lateinit var factory : ViewModelProvider.Factory
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -24,7 +36,7 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel = ViewModelProviders.of(this).get(FeedViewModel::class.java)
+        val viewModel = ViewModelProviders.of(this, factory).get(FeedViewModel::class.java)
 
         val listView = view.findViewById<RecyclerView>(R.id.feed_list) ?: throw IllegalStateException()
         listView.layoutManager = LinearLayoutManager(view.context)
