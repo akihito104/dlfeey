@@ -8,6 +8,10 @@
             name="item"
             type="com.rometools.rome.feed.synd.SyndEntry"
             />
+        <variable
+            name="viewModel"
+            type="com.freshdigitable.dlfeey.feed.FeedViewModel"
+            />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +21,7 @@
         android:paddingBottom="4dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
+        android:onClick="@{v -> viewModel.onClickListItem(item.uri)}"
         >
         <ImageView
             android:id="@+id/feedItem_thumbnail"

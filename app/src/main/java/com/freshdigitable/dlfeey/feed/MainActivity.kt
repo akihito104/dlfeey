@@ -4,14 +4,13 @@ import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModel
-import androidx.viewpager.widget.ViewPager
 import com.freshdigitable.dlfeey.R
+import com.freshdigitable.dlfeey.di.ActivityScoped
 import com.freshdigitable.dlfeey.di.ViewModelKey
-import com.google.android.material.tabs.TabLayout
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.ContributesAndroidInjector
@@ -21,26 +20,15 @@ import dagger.multibindings.IntoMap
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+    @Inject
+    lateinit var navigation: FeedNavigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewPager = findViewById<ViewPager>(R.id.main_pager)
-        viewPager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
-            override fun getItem(position: Int): Fragment {
-                return FeedFragment.newInstance(Category.values()[position].url)
-            }
-
-            override fun getPageTitle(position: Int): CharSequence? {
-                return applicationContext.getString(Category.values()[position].title)
-            }
-
-            override fun getCount(): Int = Category.values().size
-        }
-        val tabs = findViewById<TabLayout>(R.id.main_tabs)
-        tabs.setupWithViewPager(viewPager)
+        navigation.dispatcher.postEvent(FeedActivityEvent.Init)
     }
 
     @Inject
@@ -61,12 +49,25 @@ enum class Category(
 }
 
 @Module
-interface MainActivityModule {
+abstract class MainActivityModule {
+    @Binds
+    abstract fun bindsAppCompatActivity(activity: MainActivity): AppCompatActivity
+
     @ContributesAndroidInjector
-    fun contributeFeedFragment(): FeedFragment
+    abstract fun contributeFeedFragment(): FeedFragment
 
     @Binds
     @IntoMap
     @ViewModelKey(FeedViewModel::class)
-    fun bindFeedViewModel(viewModel: FeedViewModel) : ViewModel
+    abstract fun bindFeedViewModel(viewModel: FeedViewModel) : ViewModel
+
+    @Module
+    companion object {
+        @JvmStatic
+        @Provides
+        @ActivityScoped
+        fun provideFeedNavigation(dispatcher: NavigationDispatcher, activity: AppCompatActivity): FeedNavigation {
+            return FeedNavigation(dispatcher, activity, R.id.main_container)
+        }
+    }
 }

@@ -8,6 +8,7 @@ import com.rometools.rome.feed.synd.SyndFeed
 import javax.inject.Inject
 
 class FeedViewModel @Inject constructor(
+    private val dispatcher: NavigationDispatcher,
     repository: FeedRepository
 ) : ViewModel() {
 
@@ -17,5 +18,9 @@ class FeedViewModel @Inject constructor(
 
     fun loadFeed(url: String) {
         this.url.postValue(url)
+    }
+
+    fun onClickListItem(uri: String) {
+        dispatcher.postEvent(FeedActivityEvent.ShowItemDetail(uri))
     }
 }

@@ -59,7 +59,7 @@ class FeedFragment : Fragment() {
         listView.setHasFixedSize(true)
         listView.setRecycledViewPool(recycledViewPool)
 
-        val adapter = Adapter()
+        val adapter = Adapter(viewModel)
         listView.adapter = adapter
 
         viewModel.feed.observe(viewLifecycleOwner, Observer{ f ->
@@ -77,7 +77,9 @@ class FeedFragment : Fragment() {
         get() = arguments?.getString(ARGS_FEED_URL) ?: throw IllegalArgumentException("use newInstance()")
 }
 
-class Adapter : RecyclerView.Adapter<ViewHolder>() {
+class Adapter(
+    private val viewModel: FeedViewModel
+) : RecyclerView.Adapter<ViewHolder>() {
     val items = mutableListOf<SyndEntry>()
 
     init {
@@ -105,6 +107,7 @@ class Adapter : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.item = items[position]
+        holder.binding.viewModel = viewModel
     }
 }
 
