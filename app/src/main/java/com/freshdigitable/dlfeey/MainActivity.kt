@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModel
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import dagger.Binds
 import dagger.Module
 import dagger.android.AndroidInjection
@@ -36,6 +37,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
             override fun getCount(): Int = Category.values().size
         }
+        val tabs = findViewById<TabLayout>(R.id.main_tabs)
+        tabs.setupWithViewPager(viewPager)
     }
 
     @Inject
