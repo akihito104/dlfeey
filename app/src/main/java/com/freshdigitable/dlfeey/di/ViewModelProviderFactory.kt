@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

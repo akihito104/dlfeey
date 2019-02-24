@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.feed
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

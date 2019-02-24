@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.feed
 
 import android.content.Context
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.freshdigitable.dlfeey.R
 import com.freshdigitable.dlfeey.databinding.ViewFeedItemBinding
 import com.rometools.rome.feed.synd.SyndEntry
 import dagger.android.support.AndroidSupportInjection
@@ -21,19 +22,6 @@ class FeedFragment : Fragment() {
     lateinit var factory : ViewModelProvider.Factory
     @Inject
     lateinit var recycledViewPool: RecyclerView.RecycledViewPool
-
-    companion object {
-        private const val ARGS_FEED_URL = "feed_url"
-
-        fun newInstance(url: String): FeedFragment {
-            val args = Bundle().apply {
-                putString(ARGS_FEED_URL, url)
-            }
-            return FeedFragment().apply {
-                arguments = args
-            }
-        }
-    }
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -58,23 +46,40 @@ class FeedFragment : Fragment() {
         listView.setHasFixedSize(true)
         listView.setRecycledViewPool(recycledViewPool)
 
-        val adapter = Adapter()
+        val adapter = Adapter(viewModel)
         listView.adapter = adapter
 
         viewModel.feed.observe(viewLifecycleOwner, Observer{ f ->
-            adapter.items.clear()
-            adapter.items.addAll(f.entries)
-            adapter.notifyDataSetChanged()
+            f?.let {
+                adapter.items.clear()
+                adapter.items.addAll(it.entries)
+                adapter.notifyDataSetChanged()
+            }
         })
 
         viewModel.loadFeed(url)
+    }
+
+    companion object {
+        private const val ARGS_FEED_URL = "feed_url"
+
+        fun newInstance(url: String): FeedFragment {
+            val args = Bundle().apply {
+                putString(ARGS_FEED_URL, url)
+            }
+            return FeedFragment().apply {
+                arguments = args
+            }
+        }
     }
 
     private val url
         get() = arguments?.getString(ARGS_FEED_URL) ?: throw IllegalArgumentException("use newInstance()")
 }
 
-class Adapter : RecyclerView.Adapter<ViewHolder>() {
+class Adapter(
+    private val viewModel: FeedViewModel
+) : RecyclerView.Adapter<ViewHolder>() {
     val items = mutableListOf<SyndEntry>()
 
     init {
@@ -89,13 +94,20 @@ class Adapter : RecyclerView.Adapter<ViewHolder>() {
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        return ViewHolder(ViewFeedItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(
+            ViewFeedItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.item = items[position]
+        holder.binding.viewModel = viewModel
     }
 }
 
