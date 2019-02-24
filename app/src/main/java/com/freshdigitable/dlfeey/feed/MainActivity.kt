@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         navigation.dispatcher.postEvent(FeedActivityEvent.Init)
     }
 
+    override fun onBackPressed() {
+        navigation.dispatcher.postEvent(FeedActivityEvent.Back)
+    }
+
     @Inject
     lateinit var injector: DispatchingAndroidInjector<Fragment>
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
@@ -56,10 +60,18 @@ abstract class MainActivityModule {
     @ContributesAndroidInjector
     abstract fun contributeFeedFragment(): FeedFragment
 
+    @ContributesAndroidInjector
+    abstract fun contributeFeedDetailFragment(): FeedDetailFragment
+
     @Binds
     @IntoMap
     @ViewModelKey(FeedViewModel::class)
     abstract fun bindFeedViewModel(viewModel: FeedViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FeedDetailViewModel::class)
+    abstract fun bindFeedDetailViewModel(viewModel: FeedDetailViewModel): ViewModel
 
     @Module
     companion object {

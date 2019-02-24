@@ -1,7 +1,5 @@
 package com.freshdigitable.dlfeey.feed
 
-import android.util.Log
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
@@ -17,18 +15,25 @@ class FeedNavigation(
 ) {
 
     private val state : LiveData<FeedActivityState?>
+    private val currentState: FeedActivityState?
+        get() = state.value
 
     init {
         state = dispatcher.emitter.map { event ->
-            Log.d("FeedNavigation", "event: $event")
             return@map when (event) {
                 FeedActivityEvent.Init -> FeedActivityState.FeedLists
                 is FeedActivityEvent.ShowItemDetail -> FeedActivityState.FeedItemDetail(event.uri)
+                FeedActivityEvent.Back -> {
+                    if (currentState is FeedActivityState.FeedItemDetail) {
+                        FeedActivityState.FeedLists
+                    } else {
+                        FeedActivityState.Halt
+                    }
+                }
             }
         }.toFlowable(BackpressureStrategy.BUFFER).toLiveData()
 
         state.observe(activity, Observer { s ->
-            Log.d("FeedNavigation", "state: $s")
             when (s) {
                 is FeedActivityState.FeedLists -> {
                     activity.supportFragmentManager.beginTransaction()
@@ -36,8 +41,11 @@ class FeedNavigation(
                         .commit()
                 }
                 is FeedActivityState.FeedItemDetail -> {
-                    Toast.makeText(activity, s.uri, Toast.LENGTH_SHORT).show()
+                    activity.supportFragmentManager.beginTransaction()
+                        .replace(containerId, FeedDetailFragment.newInstance(s.uri))
+                        .commit()
                 }
+                FeedActivityState.Halt -> activity.finish()
             }
         })
     }
@@ -55,9 +63,14 @@ sealed class FeedActivityEvent {
     object Init : FeedActivityEvent()
 
     data class ShowItemDetail(val uri: String) : FeedActivityEvent()
+
+    object Back : FeedActivityEvent()
 }
 
 sealed class FeedActivityState {
     object FeedLists : FeedActivityState()
+
     data class FeedItemDetail(val uri: String) : FeedActivityState()
+
+    object Halt : FeedActivityState()
 }

@@ -2,6 +2,7 @@ package com.freshdigitable.dlfeey.feed
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.rometools.rome.feed.synd.SyndEntry
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedInput
 import okhttp3.Call
@@ -47,5 +48,14 @@ class FeedRepository @Inject constructor(
 
             })
         return feedSource
+    }
+
+    fun findEntry(uri: String): SyndEntry? {
+        return feedMap.values
+            .mapNotNull { it.value?.entries }
+            .flatten()
+            .firstOrNull {
+                it.uri == uri
+            }
     }
 }
