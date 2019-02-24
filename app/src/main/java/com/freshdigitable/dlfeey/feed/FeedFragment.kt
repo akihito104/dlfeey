@@ -63,9 +63,11 @@ class FeedFragment : Fragment() {
         listView.adapter = adapter
 
         viewModel.feed.observe(viewLifecycleOwner, Observer{ f ->
-            adapter.items.clear()
-            adapter.items.addAll(f.entries)
-            adapter.notifyDataSetChanged()
+            f?.let {
+                adapter.items.clear()
+                adapter.items.addAll(it.entries)
+                adapter.notifyDataSetChanged()
+            }
         })
 
         viewModel.loadFeed(url)

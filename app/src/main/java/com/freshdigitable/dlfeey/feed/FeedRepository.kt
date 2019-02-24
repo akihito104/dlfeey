@@ -11,14 +11,22 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FeedRepository @Inject constructor(
     private val client: OkHttpClient
 ){
-    private val _feed = MutableLiveData<SyndFeed>()
-    val feed: LiveData<SyndFeed> = _feed
+    private val feedMap: MutableMap<String, LiveData<SyndFeed?>> = mutableMapOf()
 
-    fun load(url: String) {
+    fun getFeed(url: String): LiveData<SyndFeed?> {
+        return feedMap[url] ?: load(url)
+    }
+
+    private fun load(url: String): LiveData<SyndFeed?> {
+        val feedSource = MutableLiveData<SyndFeed?>()
+        feedMap[url] = feedSource
+
         val request = Request.Builder()
             .url(url)
             .method("GET", null)
@@ -30,7 +38,7 @@ class FeedRepository @Inject constructor(
                     val body = response.body() ?: return
                     val input = SyndFeedInput()
                     val feed = input.build(body.charStream())
-                    _feed.postValue(feed)
+                    feedSource.postValue(feed)
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
@@ -38,5 +46,6 @@ class FeedRepository @Inject constructor(
                 }
 
             })
+        return feedSource
     }
 }
