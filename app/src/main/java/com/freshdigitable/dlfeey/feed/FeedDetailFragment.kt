@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.freshdigitable.dlfeey.databinding.FragmentFeedDetailBinding
-import com.rometools.rome.feed.synd.SyndEntry
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -52,13 +50,4 @@ class FeedDetailFragment : Fragment() {
 
     private val uri: String
         get() = arguments?.getString("uri") ?: throw IllegalArgumentException("use newInstance()")
-}
-
-class FeedDetailViewModel @Inject constructor(
-    private val repository: FeedRepository
-) : ViewModel() {
-
-    fun getItem(uri: String): SyndEntry? {
-        return repository.findEntry(uri)
-    }
 }

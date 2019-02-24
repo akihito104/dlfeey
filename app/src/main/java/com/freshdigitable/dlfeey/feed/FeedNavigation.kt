@@ -19,35 +19,42 @@ class FeedNavigation(
         get() = state.value
 
     init {
-        state = dispatcher.emitter.map { event ->
-            return@map when (event) {
-                FeedActivityEvent.Init -> FeedActivityState.FeedLists
-                is FeedActivityEvent.ShowItemDetail -> FeedActivityState.FeedItemDetail(event.uri)
-                FeedActivityEvent.Back -> {
-                    if (currentState is FeedActivityState.FeedItemDetail) {
-                        FeedActivityState.FeedLists
-                    } else {
-                        FeedActivityState.Halt
-                    }
-                }
-            }
-        }.toFlowable(BackpressureStrategy.BUFFER).toLiveData()
+        state = dispatcher.emitter
+            .map(this::mapToState)
+            .toFlowable(BackpressureStrategy.BUFFER)
+            .toLiveData()
 
-        state.observe(activity, Observer { s ->
-            when (s) {
-                is FeedActivityState.FeedLists -> {
-                    activity.supportFragmentManager.beginTransaction()
-                        .replace(containerId, FeedPagerFragment())
-                        .commit()
+        state.observe(activity, Observer(this::navigate))
+    }
+
+    private fun mapToState(event: FeedActivityEvent): FeedActivityState {
+        return when (event) {
+            FeedActivityEvent.Init -> FeedActivityState.FeedLists
+            is FeedActivityEvent.ShowItemDetail -> FeedActivityState.FeedItemDetail(event.uri)
+            FeedActivityEvent.Back -> {
+                if (currentState is FeedActivityState.FeedItemDetail) {
+                    FeedActivityState.FeedLists
+                } else {
+                    FeedActivityState.Halt
                 }
-                is FeedActivityState.FeedItemDetail -> {
-                    activity.supportFragmentManager.beginTransaction()
-                        .replace(containerId, FeedDetailFragment.newInstance(s.uri))
-                        .commit()
-                }
-                FeedActivityState.Halt -> activity.finish()
             }
-        })
+        }
+    }
+
+    private fun navigate(s: FeedActivityState?) {
+        when (s) {
+            is FeedActivityState.FeedLists -> {
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(containerId, FeedPagerFragment())
+                    .commit()
+            }
+            is FeedActivityState.FeedItemDetail -> {
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(containerId, FeedDetailFragment.newInstance(s.uri))
+                    .commit()
+            }
+            FeedActivityState.Halt -> activity.finish()
+        }
     }
 }
 

@@ -1,7 +1,6 @@
 package com.freshdigitable.dlfeey.feed
 
 import android.os.Bundle
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -37,19 +36,10 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var injector: DispatchingAndroidInjector<Fragment>
+
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return injector
     }
-}
-
-enum class Category(
-    @StringRes val title: Int,
-    val url: String
-) {
-    ALL(R.string.category_all, "http://b.hatena.ne.jp/hotentry.rss"),
-    SOCIAL(R.string.category_social, "http://b.hatena.ne.jp/hotentry/social.rss"),
-    ECONOMICS(R.string.category_economics, "http://b.hatena.ne.jp/hotentry/economics.rss"),
-    LIFE(R.string.category_life, "http://b.hatena.ne.jp/hotentry/life.rss"),
 }
 
 @Module
@@ -66,7 +56,7 @@ abstract class MainActivityModule {
     @Binds
     @IntoMap
     @ViewModelKey(FeedViewModel::class)
-    abstract fun bindFeedViewModel(viewModel: FeedViewModel) : ViewModel
+    abstract fun bindFeedViewModel(viewModel: FeedViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -78,7 +68,10 @@ abstract class MainActivityModule {
         @JvmStatic
         @Provides
         @ActivityScoped
-        fun provideFeedNavigation(dispatcher: NavigationDispatcher, activity: AppCompatActivity): FeedNavigation {
+        fun provideFeedNavigation(
+            dispatcher: NavigationDispatcher,
+            activity: AppCompatActivity
+        ): FeedNavigation {
             return FeedNavigation(dispatcher, activity, R.id.main_container)
         }
     }

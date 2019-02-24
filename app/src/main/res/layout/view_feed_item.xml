@@ -58,6 +58,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="16dp"
             android:text="@{item.description.value}"
             android:textSize="16sp"
             android:lines="3"

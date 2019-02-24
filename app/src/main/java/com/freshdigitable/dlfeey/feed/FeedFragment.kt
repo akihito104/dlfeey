@@ -23,19 +23,6 @@ class FeedFragment : Fragment() {
     @Inject
     lateinit var recycledViewPool: RecyclerView.RecycledViewPool
 
-    companion object {
-        private const val ARGS_FEED_URL = "feed_url"
-
-        fun newInstance(url: String): FeedFragment {
-            val args = Bundle().apply {
-                putString(ARGS_FEED_URL, url)
-            }
-            return FeedFragment().apply {
-                arguments = args
-            }
-        }
-    }
-
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
@@ -71,6 +58,19 @@ class FeedFragment : Fragment() {
         })
 
         viewModel.loadFeed(url)
+    }
+
+    companion object {
+        private const val ARGS_FEED_URL = "feed_url"
+
+        fun newInstance(url: String): FeedFragment {
+            val args = Bundle().apply {
+                putString(ARGS_FEED_URL, url)
+            }
+            return FeedFragment().apply {
+                arguments = args
+            }
+        }
     }
 
     private val url

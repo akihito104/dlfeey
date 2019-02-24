@@ -22,14 +22,14 @@ class FeedPagerFragment : Fragment() {
         val viewPager = view.findViewById<ViewPager>(R.id.main_pager)
         viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
             override fun getItem(position: Int): Fragment {
-                return FeedFragment.newInstance(Category.values()[position].url)
+                return FeedFragment.newInstance(FeedCategory.values()[position].url)
             }
 
             override fun getPageTitle(position: Int): CharSequence? {
-                return view.context.getString(Category.values()[position].title)
+                return view.context.getString(FeedCategory.values()[position].title)
             }
 
-            override fun getCount(): Int = Category.values().size
+            override fun getCount(): Int = FeedCategory.values().size
         }
         val tabs = view.findViewById<TabLayout>(R.id.main_tabs)
         tabs.setupWithViewPager(viewPager)
