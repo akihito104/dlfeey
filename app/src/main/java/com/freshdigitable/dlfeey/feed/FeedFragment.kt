@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.feed
 
 import android.content.Context
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.freshdigitable.dlfeey.R
 import com.freshdigitable.dlfeey.databinding.ViewFeedItemBinding
 import com.rometools.rome.feed.synd.SyndEntry
 import dagger.android.support.AndroidSupportInjection
@@ -89,7 +90,13 @@ class Adapter : RecyclerView.Adapter<ViewHolder>() {
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        return ViewHolder(ViewFeedItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(
+            ViewFeedItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int = items.size

@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.feed
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

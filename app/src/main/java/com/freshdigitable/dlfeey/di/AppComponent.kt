@@ -1,6 +1,7 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.di
 
 import android.app.Application
+import com.freshdigitable.dlfeey.DlfeeyApp
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule

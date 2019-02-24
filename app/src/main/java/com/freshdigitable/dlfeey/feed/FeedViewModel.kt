@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.feed
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject

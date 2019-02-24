@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.di
 
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds

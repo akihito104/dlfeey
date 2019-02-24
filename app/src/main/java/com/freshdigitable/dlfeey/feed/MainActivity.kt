@@ -1,4 +1,4 @@
-package com.freshdigitable.dlfeey
+package com.freshdigitable.dlfeey.feed
 
 import android.os.Bundle
 import androidx.annotation.StringRes
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModel
 import androidx.viewpager.widget.ViewPager
+import com.freshdigitable.dlfeey.R
+import com.freshdigitable.dlfeey.di.ViewModelKey
 import com.google.android.material.tabs.TabLayout
 import dagger.Binds
 import dagger.Module
